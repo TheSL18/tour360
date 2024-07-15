@@ -1,0 +1,115 @@
+{
+  "location1": {
+    "image": "/static/images/image1.jpg",
+    "hotspots": [
+      {
+        "pitch": -5.776188931810572,
+        "yaw": -162.01362192082792,
+        "type": "scene",
+        "text": "Auditorio C202",
+        "sceneId": "location2"
+      },
+      {
+        "pitch": -13.47405880123339,
+        "yaw": 121.42653901560092,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location3"
+      }
+    ]
+  },
+  "location2": {
+    "image": "/static/images/image2.jpg",
+    "hotspots": [
+      {
+        "pitch": -4.549619397822834,
+        "yaw": -129.3825796273068,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location1"
+      },
+      {
+        "pitch": -4.658587245398333,
+        "yaw": -33.17601948258342,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location3"
+      }
+    ]
+  },
+  "location3": {
+    "image": "/static/images/image3.jpg",
+    "hotspots": [
+      {
+        "pitch": 1.423316367165358,
+        "yaw": -175.56554348837562,
+        "type": "scene",
+        "text": "Auditorio C202",
+        "sceneId": "location2"
+      },
+      {
+        "pitch": -11.60966758558587,
+        "yaw": 66.48281269194925,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location4"
+      },
+      {
+        "pitch": -12.787046672847277,
+        "yaw": -83.51262496231976,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location1"
+      },
+      {
+        "pitch": -17.69409627092789,
+        "yaw": 9.448292347880237,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location5"
+      }
+    ]
+  },
+  "location4": {
+    "image": "/static/images/image4.jpg",
+    "hotspots": [
+      {
+        "pitch": -8.054221486489118,
+        "yaw": 4.122695296916439,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location3",
+        "div": {}
+      }
+    ]
+  },
+  "location5": {
+    "image": "/static/images/image5.jpg",
+    "hotspots": [
+      {
+        "pitch": -16.061990422811846,
+        "yaw": -52.80699616062435,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location4",
+        "div": {}
+      },
+      {
+        "pitch": -14.886463449098954,
+        "yaw": 25.972239557672836,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location3",
+        "div": {}
+      },
+      {
+        "pitch": -3.368495502815793,
+        "yaw": 25.56374439444332,
+        "type": "scene",
+        "text": "",
+        "sceneId": "location2",
+        "div": {}
+      }
+    ]
+  }
+}
