@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tour 360</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.css"/>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        #panorama {
+            width: 100%;
+            height: 100%;
+        }
+        #editor-tools {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            display: none;
+        }
+        #editor-tools button {
+            margin: 5px;
+        }
+        #editor-tools input {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="editor-tools">
+        <button id="add-hotspot">Agregar Hotspot</button>
+        <button id="save-hotspots">Guardar Hotspots</button>
+        <input type="file" id="load-hotspots">
+    </div>
+    <div id="panorama"></div>
+    <script src="https://cdn.jsdelivr.net/npm/pannellum/build/pannellum.js"></script>
+    <script>
+        let locations = {};
+        let currentLocationId = 'location1';
+        let viewer;
+        let isEditing = false;
+        let isAddingHotspot = false;
+        let loadHotspots = true;
+
+        function loadPanorama(locationId) {
+            currentLocationId = locationId;
+            const location = locations[locationId];
+            if (viewer) {
+                viewer.destroy(); // Eliminar el visor anterior
+            }
+            viewer = pannellum.viewer('panorama', {
+                "type": "equirectangular",
+                "panorama": location.image,
+                "autoLoad": true,
+                "hotSpots": loadHotspots ? location.hotspots : []
+            }).on('scenechange', function(sceneId) {
+                loadPanorama(sceneId); // Cargar la siguiente imagen al cambiar de escena
+            });
+
+            if (isEditing) {
+                document.getElementById('editor-tools').style.display = 'block';
+                viewer.on('mousedown', function(event) {
+                    if (isAddingHotspot) {
+                        const coords = viewer.mouseEventToCoords(event);
+                        const pitch = coords[0];
+                        const yaw = coords[1];
+                        const newHotspot = {
+                            "pitch": pitch,
+                            "yaw": yaw,
+                            "type": "scene",
+                            "text": "",
+                            "sceneId": "location1" // Default sceneId, puede cambiarse
+                        };
+                        locations[currentLocationId].hotspots.push(newHotspot);
+                        viewer.addHotSpot(newHotspot);
+                        isAddingHotspot = false; // Desactivar modo de agregar hotspot después de agregar uno
+                    }
+                });
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            isEditing = urlParams.has('edit');
+            const locationParam = urlParams.get('location');
+            loadHotspots = !urlParams.has('nohotspots');
+
+            fetch('/hotspots.json')
+                .then(response => response.json())
+                .then(data => {
+                    locations = data;
+                    if (locationParam && locations[locationParam]) {
+                        loadPanorama(locationParam);
+                    } else {
+                        loadPanorama(currentLocationId);
+                    }
+                });
+
+            if (isEditing) {
+                document.getElementById('editor-tools').style.display = 'block';
+                document.getElementById('add-hotspot').addEventListener('click', function() {
+                    isAddingHotspot = true; // Activar modo de agregar hotspot
+                });
+                document.getElementById('save-hotspots').addEventListener('click', function() {
+                    const a = document.createElement('a');
+                    const file = new Blob([JSON.stringify(locations, null, 2)], {type: 'application/json'}); // Formatear JSON
+                    a.href = URL.createObjectURL(file);
+                    a.download = 'hotspots.json';
+                    a.click();
+                });
+                document.getElementById('load-hotspots').addEventListener('change', function(event) {
+                    const file = event.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        locations = JSON.parse(e.target.result);
+                        loadPanorama(currentLocationId);
+                    };
+                    reader.readAsText(file);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
